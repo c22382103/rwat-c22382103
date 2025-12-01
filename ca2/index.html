@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CA2 Memory Game</title>
+</head>
+
+<body>
+
+    <!--------------------------- given ------------------------------>
+    <template id="shape-card-template">
+        <style>
+            .card-container {
+                perspective: 1000px;
+            }
+
+            .card {
+                height: var(--card-height);
+                width: var(--card-width);
+                border: var(--card-border) solid gray;
+                transition: transform 0.6s;
+                transform-style: preserve-3d;
+                position: relative;
+            }
+
+            .card-face-down {
+                transform: rotateY(180deg);
+            }
+
+            .card-face-up {
+                transform: rotateY(0deg);
+            }
+
+            .card-back,
+            .card-front {
+                position: absolute;
+                backface-visibility: hidden;
+            }
+
+            .card-back {
+                transform: rotateY(180deg);
+            }
+
+            .circle {
+                cx: 50;
+                cy: 50;
+                r: 40;
+            }
+
+            .square {
+                x: 15;
+                y: 15;
+                width: 70;
+                height: 70;
+            }
+
+            .triangle {
+                points: 50,15 15,85 85,85;
+            }
+
+            .card-back rect {
+                fill: lightgray;
+            }
+
+            .card-front svg {
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+
+        <div class="card-container">
+            <div class="card card-face-down">
+                <div class="card-back">
+                    <svg viewBox="0 0 100 100">
+                        <rect x="10" y="10" width="80" height="80"></rect>
+                    </svg>
+                </div>
+                <div class="card-front">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="circle" />
+                        <rect class="square" />
+                        <polygon class="triangle" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- ************* my memory game element ************* -->
+    <shape-memory-game size="3 x 4"></shape-memory-game>
+
+    <!-- main.js must load LAST -->
+    <script type="module" src="./main.js"></script>
+
+</body>
+
+</html>
