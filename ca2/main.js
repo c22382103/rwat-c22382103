@@ -143,4 +143,3 @@ class ShapeMemoryGame extends HTMLElement {
 }
 
 customElements.define("shape-memory-game", ShapeMemoryGame);
-
