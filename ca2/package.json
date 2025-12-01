@@ -1,0 +1,14 @@
+{
+  "name": "ca2",
+  "version": "1.0.0",
+  "description": "RWAT CA2 memory game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Julliane Mae Rodrigo",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^7.2.6"
+  }
+}
