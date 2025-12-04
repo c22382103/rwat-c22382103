@@ -1,16 +1,17 @@
 {
   "name": "ca2",
   "version": "1.0.0",
-  "description": "RWAT CA2 memory game",
-  "main": "index.js",
+  "description": "",
+  "main": "main.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
-  "author": "Julliane Mae Rodrigo",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
   "devDependencies": {
-    "vite": "^5.4.21"
+    "vite": "^6.0.0"
   }
 }
