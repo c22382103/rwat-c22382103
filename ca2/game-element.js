@@ -1,7 +1,8 @@
 // game-element.js
 // Memory game custom element that uses <shape-card> cards.
 
-import { ShapeCard } from './shapecard.js';
+import { ShapeCard } from "./shapecard.js";
+import { saveGameResult, getAverageClicks } from "./firebase.js";
 
 class MemoryGame extends HTMLElement {
     constructor() {
@@ -66,6 +67,13 @@ class MemoryGame extends HTMLElement {
                     font-size: 1rem;
                 }
 
+                .header button {
+                    margin-top: 10px;
+                    padding: 6px 12px;
+                    font-size: 1rem;
+                    cursor: pointer;
+                }
+
                 .board {
                     display: grid;
                     grid-template-columns: repeat(${this.cols}, auto);
@@ -80,7 +88,7 @@ class MemoryGame extends HTMLElement {
                     font-size: 1.1rem;
                 }
 
-                button {
+                .message-area button {
                     margin-top: 10px;
                     padding: 6px 12px;
                     font-size: 1rem;
@@ -90,6 +98,7 @@ class MemoryGame extends HTMLElement {
             <div class="header">
                 <h1>Memory Game</h1>
                 <p class="clicks">Clicks: 0</p>
+                <button id="show-average" type="button">Show Average Clicks</button>
             </div>
             <div class="board"></div>
             <div class="message-area" aria-live="polite"></div>
@@ -105,6 +114,7 @@ class MemoryGame extends HTMLElement {
 
         this.updateClickDisplay();
         this.setupCardClickHandling(board);
+        this.setupAverageButton();
     }
 
     setupCardClickHandling(board) {
@@ -187,15 +197,55 @@ class MemoryGame extends HTMLElement {
         }
     }
 
-    showGameCompletedMessage() {
-        const messageArea = this.shadowRoot.querySelector('.message-area');
+    // Called when the game is finished
+    async showGameCompletedMessage() {
+        const messageArea = this.shadowRoot.querySelector(".message-area");
         messageArea.textContent = `You completed the game in ${this.clickCount} clicks!`;
 
-        const button = document.createElement('button');
-        button.textContent = 'Play Again';
-        button.addEventListener('click', () => this.startNewGame());
-        messageArea.appendChild(document.createElement('br'));
+        try {
+            await saveGameResult(this.clickCount);
+        } catch (error) {
+            console.error("Error saving game result:", error);
+        }
+
+        const button = document.createElement("button");
+        button.textContent = "Play Again";
+        button.addEventListener("click", () => this.startNewGame());
+        messageArea.appendChild(document.createElement("br"));
         messageArea.appendChild(button);
+    }
+
+    // Wire up the "Show Average Clicks" button (Stage 3 requirement)
+    setupAverageButton() {
+        const avgButton = this.shadowRoot.querySelector("#show-average");
+        const messageArea = this.shadowRoot.querySelector(".message-area");
+
+        if (!avgButton || !messageArea) {
+            return;
+        }
+
+        avgButton.addEventListener("click", async () => {
+            avgButton.disabled = true;
+            messageArea.textContent = "Calculating average clicks...";
+
+            try {
+                const average = await getAverageClicks();
+
+                if (average === null) {
+                    messageArea.textContent =
+                        "No completed games stored yet to calculate an average.";
+                } else {
+                    messageArea.textContent =
+                        `Average clicks to complete the game: ${average.toFixed(1)}`;
+                }
+            } catch (error) {
+                console.error("Error getting average clicks:", error);
+                messageArea.textContent =
+                    "Could not load average clicks. Please try again.";
+            } finally {
+                avgButton.disabled = false;
+            }
+        });
     }
 }
 
