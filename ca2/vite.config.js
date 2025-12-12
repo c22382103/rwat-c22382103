@@ -1,6 +1,5 @@
-// vite.config.js
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
 
 export default defineConfig({
-  root: './'
+  base: "/rwat-c22382103/",
 });
