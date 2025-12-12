@@ -3,6 +3,7 @@
 
 import { ShapeCard } from "./shapecard.js";
 import { saveGameResult, getAverageClicks } from "./firebase.js";
+import { parseBoardSize } from "./game-utils.js";
 
 class MemoryGame extends HTMLElement {
     constructor() {
@@ -25,16 +26,14 @@ class MemoryGame extends HTMLElement {
     }
 
     setupFromSizeAttribute() {
-        const sizeAttr = this.getAttribute('size') || '3x4';
-        const parts = sizeAttr.split('x');
+        const sizeAttr = this.getAttribute("size") || "3x4";
+        const { rows, cols, totalPairs } = parseBoardSize(sizeAttr);
 
-        const rows = parseInt(parts[0].trim(), 10);
-        const cols = parseInt(parts[1].trim(), 10);
-
-        this.rows = Number.isNaN(rows) ? 3 : rows;
-        this.cols = Number.isNaN(cols) ? 4 : cols;
-        this.totalPairs = (this.rows * this.cols) / 2;
+        this.rows = rows;
+        this.cols = cols;
+        this.totalPairs = totalPairs;
     }
+
 
     startNewGame() {
         this.foundPairs = 0;
